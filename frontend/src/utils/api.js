@@ -37,3 +37,25 @@ async function fetchJson(url, options, onCancel) {
     const options = {method: "POST", headers, body: JSON.stringify({ data: data}), signal}
     return await fetchJson(url, options)
   }
+
+  export async function readAnimal(animal_id, signal) {
+      const url = new URL(`${API_BASE_URL}/animals/${animal_id}`)
+      return await fetchJson(url, {headers, signal}, [])
+  }
+
+  export async function editAnimal(data, signal) {
+    const url = new URL(`${API_BASE_URL}/animals/${data.animal_id}`)
+    const options = {method: "PUT", headers, body: JSON.stringify({ data: data}), signal}
+    return await fetchJson(url, options)
+  }
+
+  export async function deleteAnimal(animal_id, signal) {
+      const url = new URL(`${API_BASE_URL}/animals/${animal_id}`)
+      return await fetchJson(url, {method: "DELETE", headers, signal}, [])
+  }
+
+  export async function listAnimalsByRegion(continents, signal) {
+      console.log(continents)
+      const url = new URL(`${API_BASE_URL}/animals/search/${continents}`)
+      return await fetchJson(url, {headers, signal}, [])
+  }

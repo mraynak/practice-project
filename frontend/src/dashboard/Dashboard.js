@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { listAnimals } from "../utils/api";
-import { useHistory } from "react-router"
 import Animals from "./Animals"
 import ErrorAlert from "../layout/ErrorAlert";
 
@@ -8,7 +7,6 @@ function Dashboard() {
     //sets state variables to be used
   const [animals, setAnimals] = useState([]);
   const [animalsError, setAnimalsError] = useState(null)
-  const history = useHistory()
 
   //loads the dashboard and rerenders when date changes
   useEffect(loadDashboard, []);

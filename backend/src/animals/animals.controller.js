@@ -3,12 +3,29 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary")
 
 async function list(req, res, next) {
     const data = await animalsService.list()
+    console.log(data)
     res.json({data: data})
 }
+
+async function listByReg(req, res, next) {
+    const {continents} = req.params
+    console.log(continents)
+    const data = await animalsService.listByRegion(continents)
+    res.json({data: data})
+}
+
+//lists a single reservation based on reservation_id
+function read(req, res) {
+    res.json({data: res.locals.animal})
+  }
 
 // creates a new table
 async function create(req, res) {
     res.status(201).json({ data: await animalsService.create(res.locals.data) })
+  }
+
+async function update(req, res, next) {
+    res.json({data: await animalsService.update(res.locals.data)})
   }
 
 //Validators
@@ -46,7 +63,31 @@ function hasValidProperties(req, res, next) {
     return next()
   }
 
+async function animalExists(req, res, next) {
+    const {animal_id} = req.params
+    const animal = await animalsService.read(animal_id)
+
+    if(animal) {
+        res.locals.animal = animal
+        return next()
+    }
+    return next({
+        status: 404,
+        message: `Animal ${animal_id} cannot be found`
+    })
+}
+
+async function destroy(req, res) {
+    const {animal} = res.locals
+    await animalsService.delete(animal.animal_id)
+    res.sendStatus(204)
+}
+
 module.exports = {
     list: [asyncErrorBoundary(list)],
-    create: [hasData, hasValidProperties, asyncErrorBoundary(create)]
+    read: [asyncErrorBoundary(animalExists), read],
+    create: [hasData, hasValidProperties, asyncErrorBoundary(create)],
+    update: [asyncErrorBoundary(animalExists), hasData, hasValidProperties, asyncErrorBoundary(update)],
+    delete: [asyncErrorBoundary(animalExists), asyncErrorBoundary(destroy)],
+    listRegion: [asyncErrorBoundary(listByReg)]
 }

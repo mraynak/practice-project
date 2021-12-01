@@ -32,7 +32,7 @@ function CreateReservation() {
         <>
         <div>
             <ErrorAlert error={animalError} />
-            <h1 className="mt-3">Create Animal</h1>
+            <h1 className="mt-3">Add Animal</h1>
             <Form formData = {formData} setFormData = {setFormData} submitHandler={submitHandler} />
         </div>
         </>
